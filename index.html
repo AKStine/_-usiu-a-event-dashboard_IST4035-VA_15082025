@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Meta: correct encoding + responsive viewport -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- SEO/Sharing -->
+  <title>USIU‑A Event Booking Dashboard</title>
+  <meta name="description" content="One-page event booking dashboard for USIU‑Africa: discover events and register, with persistent slots and responsive UI." />
+
+  <!-- Brand fonts: Helvetica Neue (fallbacks included) -->
+  <!-- Note: Helvetica Neue licensing varies; we fall back safely. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Inter used only as a visual fallback if Helvetica Neue isn't present on device -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <!-- External CSS (exam requirement) -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- External JS (deferred) (exam requirement) -->
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <!-- Skip link for keyboard users -->
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ================= HEADER ================= -->
+  <header class="site-header" role="banner">
+    <div class="container header-inner">
+      <!-- Logo placeholder linking to official site (requirement) -->
+      <a class="brand" href="https://www.usiu.ac.ke" target="_blank" rel="noopener" aria-label="USIU‑Africa home">
+        <!-- Accessible SVG placeholder in brand colors -->
+        <svg width="120" height="34" viewBox="0 0 120 34" aria-hidden="true">
+          <rect x="0" y="0" width="120" height="34" rx="6" fill="#2B3990"></rect>
+          <text x="12" y="22" font-family="Helvetica, Arial, sans-serif" font-size="16" fill="#CDCB05" font-weight="700">USIU‑A</text>
+        </svg>
+      </a>
+
+      <!-- Title -->
+      <h1 class="app-title">Event Booking Dashboard</h1>
+
+      <!-- Admin: Reset demo data (clears localStorage and reseeds) -->
+      <button id="resetData" class="btn btn-ghost" aria-label="Reset demo data">Reset Demo Data</button>
+    </div>
+  </header>
+
+  <!-- ================ MAIN ==================== -->
+  <main id="main" class="container" role="main">
+    <!-- EVENTS SECTION -->
+    <section class="card" aria-labelledby="eventsHeading">
+      <header class="card-head">
+        <h2 id="eventsHeading">Upcoming & Recent Events</h2>
+
+        <!-- Optional: quick filter by text (bonus UX, not required) -->
+        <div class="filters">
+          <label for="q" class="sr-only">Search events</label>
+          <input id="q" type="search" placeholder="Search by name or venue…" />
+        </div>
+      </header>
+
+      <!-- Responsive table wrapper -->
+      <div class="table-wrap">
+        <table class="events-table">
+          <thead>
+            <tr>
+              <th scope="col">Event</th>
+              <th scope="col">Date</th>
+              <th scope="col">Venue</th>
+              <th scope="col">Slots</th>
+              <th scope="col" class="col-action">Action</th>
+            </tr>
+          </thead>
+          <tbody id="eventRows" aria-live="polite" aria-busy="false">
+            <!-- Rows rendered by script.js -->
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="5">
+                <div class="pagination" role="navigation" aria-label="Event pagination">
+                  <button id="prevPage" class="btn btn-outline" aria-label="Previous page">‹ Prev</button>
+                  <span id="pageStatus" aria-live="polite">Page 1 / 1</span>
+                  <button id="nextPage" class="btn btn-outline" aria-label="Next page">Next ›</button>
+                </div>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <!-- Inline system messages (success/error), announced to screen readers -->
+      <div id="systemMsg" class="system-msg" role="status" aria-live="polite"></div>
+    </section>
+
+    <!-- REGISTRATION FORM -->
+    <section class="card" aria-labelledby="formHeading">
+      <header class="card-head">
+        <h2 id="formHeading">Register for an Event</h2>
+        <p class="muted small">*All fields required. Student ID must be exactly six digits (e.g., 670797).</p>
+      </header>
+
+      <form id="registerForm" novalidate>
+        <div class="form-grid">
+          <!-- Name -->
+          <div class="form-field">
+            <label for="name">Name</label>
+            <input id="name" name="name" type="text" autocomplete="name" required />
+            <small class="error" id="nameError" aria-live="polite"></small>
+          </div>
+
+          <!-- Student ID (exactly 6 digits) -->
+          <div class="form-field">
+            <label for="studentId">Student ID</label>
+            <input id="studentId" name="studentId" type="text" inputmode="numeric" pattern="\\d{6}" placeholder="e.g., 670797" required />
+            <small class="error" id="idError" aria-live="polite"></small>
+          </div>
+
+          <!-- Event dropdown (populated from events list) -->
+          <div class="form-field">
+            <label for="eventSelect">Select Event</label>
+            <select id="eventSelect" name="eventSelect" required></select>
+            <small class="error" id="eventError" aria-live="polite"></small>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit Registration</button>
+
+        <!-- Confirmation message appears here -->
+        <p id="formConfirm" class="confirm" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <!-- ================= FOOTER ================== -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-inner">
+      <p>
+        © <span id="year"></span> United States International University – Africa
+        • <a href="tel:+254730116000">+254 730 116 000</a>
+        • <a href="mailto:admit@usiu.ac.ke">admit@usiu.ac.ke</a>
+      </p>
+      <ul class="socials" aria-label="USIU‑Africa social media">
+        <li><a href="https://www.linkedin.com/school/united-states-international-university-africa/" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="https://www.instagram.com/usiuafrica/" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="https://x.com/ExperienceUSIU" target="_blank" rel="noopener">X (Twitter)</a></li>
+      </ul>
+    </div>
+  </footer>
+</body>
+</html>
