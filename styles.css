@@ -1,0 +1,172 @@
+/* =========================================================
+   USIU‑A Event Booking Dashboard (External CSS)
+   - Brand-accurate palette & accessible contrast
+   - Responsive layout: mobile-first with grid & flex
+   - Clean UI with subtle motion
+   ========================================================= */
+
+/* ---------- CSS Variables (USIU brand) ---------- */
+:root{
+  --usiu-blue: #2B3990;   /* R43 G57 B144  (USIU Guide) */
+  --usiu-yellow:#CDCB05;  /* R205 G203 B5  (USIU Guide) */
+  --ink: #1A1A1A;
+  --paper: #FFFFFF;
+  --muted: #5b6478;
+  --surface: #f5f7fb;
+  --line: #e3e7f0;
+  --good: #0a7d53;
+  --warn: #b54708;
+  --bad:  #b42318;
+  --radius: 14px;
+  --shadow: 0 10px 28px rgba(20,30,60,.08);
+}
+
+/* ---------- Global Resets ---------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body{
+  margin: 0;
+  color: var(--ink);
+  background: radial-gradient(1600px 700px at 0% -10%, #f1f3fa 0%, #fff 60%);
+  font-family: "Helvetica Neue", Helvetica, Arial, "Inter", system-ui, -apple-system, sans-serif;
+  line-height: 1.55;
+}
+
+/* Containers */
+.container{ width: min(1100px, 92%); margin-inline: auto; }
+
+/* ---------- Accessibility helpers ---------- */
+.sr-only{
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+:focus-visible { outline: 3px solid var(--usiu-yellow); outline-offset: 3px; }
+
+/* ---------- Header ---------- */
+.site-header{
+  position: sticky; top: 0; z-index: 50;
+  background: linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.65));
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(6px);
+}
+.header-inner{
+  display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: center;
+  padding: 10px 0;
+}
+.brand{ display:inline-flex; align-items:center; text-decoration:none; }
+.app-title{
+  margin: 0; text-align:center; font-size: clamp(18px, 2.6vw, 22px); font-weight: 800; letter-spacing: .3px;
+}
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
+  padding:10px 14px; border-radius: 10px; border:1px solid var(--line);
+  background:#fff; color:#223; font-weight:600; cursor:pointer; transition:.2s ease;
+}
+.btn:hover{ transform: translateY(-1px); box-shadow: var(--shadow); }
+.btn-primary{ background: var(--usiu-blue); border-color: var(--usiu-blue); color:#fff; }
+.btn-outline{ background: transparent; border-color: var(--usiu-blue); color: var(--usiu-blue); }
+.btn-ghost{ background: #fff; border-color: var(--line); color: #334; }
+.btn:disabled{ opacity:.5; cursor:not-allowed; }
+
+/* ---------- Cards ---------- */
+.card{
+  background: #fff; border:1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 16px; margin: 16px 0;
+}
+.card-head{
+  display:flex; align-items:center; justify-content:space-between; gap: 12px; flex-wrap: wrap;
+  border-bottom:1px solid var(--line); padding-bottom: 10px; margin-bottom: 10px;
+}
+.muted{ color: var(--muted); }
+.small{ font-size: .9rem; }
+
+/* ---------- Filters/Search ---------- */
+.filters input[type="search"]{
+  border:1px solid var(--line); border-radius:10px; padding:10px 12px; min-width:240px;
+}
+
+/* ---------- Table ---------- */
+.table-wrap{ width:100%; overflow:auto; }
+.events-table{
+  width:100%; border-collapse: separate; border-spacing: 0;
+}
+.events-table thead th{
+  position: sticky; top: 0; z-index: 1;
+  background: var(--surface); color: #2b3550; text-align:left;
+  font-weight:800; padding: 10px 12px; border-bottom:2px solid var(--line);
+}
+.events-table tbody td{
+  padding: 12px; border-bottom:1px solid var(--line);
+}
+.events-table tbody tr:nth-child(odd){ background: #fff; }
+.events-table tbody tr:nth-child(even){ background: #fafbfd; }
+.events-table tbody tr:hover{ background: #f1f5ff; }
+.col-action{ width: 160px; }
+
+/* Slots label colors */
+.slot-ok{ color: var(--good); font-weight: 700; }
+.slot-low{ color: var(--warn); font-weight: 700; }
+.slot-zero{ color: var(--bad);  font-weight: 700; }
+
+/* ---------- Pagination ---------- */
+.pagination{
+  display:flex; align-items:center; justify-content:center; gap: 12px; padding: 10px 0 0;
+}
+
+/* ---------- Messages/Toasts ---------- */
+.system-msg{
+  margin-top: 10px; padding: 12px 14px; border-radius: 10px; display:none;
+}
+.system-msg.show{ display:block; }
+.system-msg.success{ background: #e9f8f0; border:1px solid #c7f0de; color:#0a5136; }
+.system-msg.error{ background: #fdecec; border:1px solid #f7c4c0; color:#7a1d16; }
+
+/* ---------- Form ---------- */
+.form-grid{
+  display:grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+}
+.form-field{ display:grid; gap:6px; }
+label{ font-weight:700; }
+input, select{
+  border:1px solid var(--line); border-radius:10px; padding:10px 12px; font: inherit;
+  background: #fff;
+}
+input:focus, select:focus{ outline:2px solid var(--usiu-yellow); border-color: var(--usiu-yellow); }
+.error{ min-height: 1em; color: var(--bad); }
+.confirm{ margin-top: 10px; color: var(--good); font-weight: 700; }
+
+/* ---------- Footer ---------- */
+.site-footer{
+  border-top:1px solid var(--line); background: #fff; margin-top: 24px;
+}
+.footer-inner{
+  display:flex; align-items:center; justify-content:space-between; gap: 12px; padding: 14px 0;
+}
+.footer-inner a{ color: var(--usiu-blue); text-decoration:none; }
+.footer-inner a:hover{ text-decoration: underline; }
+.socials{ list-style:none; display:flex; gap:12px; margin:0; padding:0; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1024px){
+  .form-grid{ grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 720px){
+  .header-inner{ grid-template-columns: auto 1fr auto; }
+  .app-title{ font-size: 18px; }
+  .form-grid{ grid-template-columns: 1fr; }
+  .col-action{ width: 120px; }
+}
+@media (max-width: 520px){
+  .filters input[type="search"]{ min-width: 100%; }
+}
+
+/* ---------- Skip link ---------- */
+.skip-link{
+  position: absolute; left: -9999px; top: 0; background: var(--usiu-yellow); color:#000;
+  padding: 10px 12px; border-radius: 8px; z-index: 999;
+}
+.skip-link:focus{ left: 10px; }
