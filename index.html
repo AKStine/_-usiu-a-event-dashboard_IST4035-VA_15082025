@@ -7,19 +7,17 @@
 
   <!-- SEO/Sharing -->
   <title>USIU‑A Event Booking Dashboard</title>
-  <meta name="description" content="One-page event booking dashboard for USIU‑Africa: discover events and register, with persistent slots and responsive UI." />
+  <meta name="description" content="One-page USIU‑Africa event booking dashboard with pagination, registration, validation, persistence, dark mode, CSV export, and filters." />
 
-  <!-- Brand fonts: Helvetica Neue (fallbacks included) -->
-  <!-- Note: Helvetica Neue licensing varies; we fall back safely. -->
+  <!-- Brand fonts: Helvetica Neue (fallbacks included). Inter is a safe visual fallback. -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- Inter used only as a visual fallback if Helvetica Neue isn't present on device -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
   <!-- External CSS (exam requirement) -->
   <link rel="stylesheet" href="styles.css" />
 
-  <!-- External JS (deferred) (exam requirement) -->
+  <!-- External JS (deferred) -->
   <script src="script.js" defer></script>
 </head>
 <body>
@@ -29,22 +27,27 @@
   <!-- ================= HEADER ================= -->
   <header class="site-header" role="banner">
     <div class="container header-inner">
-      <!-- Logo placeholder linking to official site (requirement) -->
+      <!-- Logo image placeholder linking to official site -->
       <a class="brand" href="https://www.usiu.ac.ke" target="_blank" rel="noopener" aria-label="USIU‑Africa home">
-        <!-- Accessible SVG placeholder in brand colors -->
-        <svg width="120" height="34" viewBox="0 0 120 34" aria-hidden="true">
-          <rect x="0" y="0" width="120" height="34" rx="6" fill="#2B3990"></rect>
-          <text x="12" y="22" font-family="Helvetica, Arial, sans-serif" font-size="16" fill="#CDCB05" font-weight="700">USIU‑A</text>
-        </svg>
+        <img
+          src="https://github.com/AKStine/_-usiu-a-event-dashboard_IST4035-VA_15082025/blob/main/USIU-A_LOGO.png?raw=true"
+          alt="USIU‑Africa Logo" class="brand-logo" />
       </a>
 
       <!-- Title -->
       <h1 class="app-title">Event Booking Dashboard</h1>
 
-      <!-- Admin: Reset demo data (clears localStorage and reseeds) -->
-      <button id="resetData" class="btn btn-ghost" aria-label="Reset demo data">Reset Demo Data</button>
+      <!-- Header actions -->
+      <div class="header-actions">
+        <button id="resetData" class="btn btn-ghost" aria-label="Reset demo data">Reset Demo Data</button>
+        <button id="exportCSV" class="btn btn-outline" aria-label="Export bookings as CSV">Export CSV</button>
+        <button id="themeToggle" class="btn btn-ghost" aria-pressed="false" aria-label="Toggle dark mode">Dark Mode</button>
+      </div>
     </div>
   </header>
+
+  <!-- Toaster (top-right notifications) -->
+  <div id="toaster" class="toaster" aria-live="polite" aria-atomic="true"></div>
 
   <!-- ================ MAIN ==================== -->
   <main id="main" class="container" role="main">
@@ -53,10 +56,43 @@
       <header class="card-head">
         <h2 id="eventsHeading">Upcoming & Recent Events</h2>
 
-        <!-- Optional: quick filter by text (bonus UX, not required) -->
+        <!-- Filters: search + category chips -->
         <div class="filters">
           <label for="q" class="sr-only">Search events</label>
           <input id="q" type="search" placeholder="Search by name or venue…" />
+
+          <fieldset class="cat-filters" aria-label="Category filters">
+            <legend class="sr-only">Categories</legend>
+
+            <!-- Category chips (multi-select) -->
+            <label class="chip">
+              <input type="checkbox" value="sports" id="cat-sports" />
+              <span>Sports</span>
+            </label>
+            <label class="chip">
+              <input type="checkbox" value="symposium" id="cat-symposium" />
+              <span>Symposium</span>
+            </label>
+            <label class="chip">
+              <input type="checkbox" value="congress" id="cat-congress" />
+              <span>Congress</span>
+            </label>
+            <label class="chip">
+              <input type="checkbox" value="conference" id="cat-conference" />
+              <span>Conference</span>
+            </label>
+            <label class="chip">
+              <input type="checkbox" value="career" id="cat-career" />
+              <span>Career</span>
+            </label>
+            <label class="chip">
+              <input type="checkbox" value="workshop" id="cat-workshop" />
+              <span>Workshop</span>
+            </label>
+
+            <!-- Reset all categories -->
+            <button type="button" id="clearCats" class="btn btn-ghost small-btn" aria-label="Clear category filters">Clear</button>
+          </fieldset>
         </div>
       </header>
 
@@ -89,8 +125,13 @@
         </table>
       </div>
 
-      <!-- Inline system messages (success/error), announced to screen readers -->
+      <!-- Inline system message (still available for inline context) -->
       <div id="systemMsg" class="system-msg" role="status" aria-live="polite"></div>
+
+      <!-- Booking stats -->
+      <p id="bookingStats" class="muted small" aria-live="polite">
+        Total bookings: <strong><span id="bookingCount">0</span></strong>
+      </p>
     </section>
 
     <!-- REGISTRATION FORM -->
@@ -109,14 +150,14 @@
             <small class="error" id="nameError" aria-live="polite"></small>
           </div>
 
-          <!-- Student ID (exactly 6 digits) -->
+          <!-- Student ID -->
           <div class="form-field">
             <label for="studentId">Student ID</label>
-            <input id="studentId" name="studentId" type="text" inputmode="numeric" pattern="\\d{6}" placeholder="e.g., 670797" required />
+            <input id="studentId" name="studentId" type="text" inputmode="numeric" pattern="\d{6}" placeholder="e.g., 670797" required />
             <small class="error" id="idError" aria-live="polite"></small>
           </div>
 
-          <!-- Event dropdown (populated from events list) -->
+          <!-- Event dropdown -->
           <div class="form-field">
             <label for="eventSelect">Select Event</label>
             <select id="eventSelect" name="eventSelect" required></select>
@@ -125,8 +166,6 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Submit Registration</button>
-
-        <!-- Confirmation message appears here -->
         <p id="formConfirm" class="confirm" role="status" aria-live="polite"></p>
       </form>
     </section>
